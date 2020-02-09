@@ -5,23 +5,31 @@ import java.time.Month
 import java.util.concurrent.TimeUnit
 
 import au.com.bytecode.opencsv.CSVWriter
+import com.typesafe.config.Config
 
 import scala.collection.JavaConverters._
-import scala.io.Source
+import scala.io.BufferedSource
 
-object ParsingLogic {
+case class ParsingLogic(bufferedSource: BufferedSource, config: Config) {
   type BikeInfo = String
 
-  private val table = tableReader()
+  private val table = bufferedSource
+    .getLines()
+    .map(_.replaceAll("\"", "").split(","))
+    .toList
+    .drop(Columns.recordIdColumnIndexFirst.id)
 
   //task_4
-  def generalStats() {
-    val strPath = "/general-stats.csv"
+  def generalStats(): Unit = {
+    val strPath = config.getString("url.pathFileGeneralStats")
 
     val counterRow = table.length;
-    val theLongestTrip = table.map(line => (TimeUnit.MINUTES.convert(Converter.convertToDate(line(Columns.columnIdSecond.id)).getTime -
-      Converter.convertToDate(line(Columns.columnIdFirst.id)).getTime, TimeUnit.MILLISECONDS))).max
-    val uniqueBikes = table.map(line => line(Columns.columnIdEleventh.id)).distinct.length
+    val theLongestTrip = table.map(line => (TimeUnit.MINUTES.convert
+    (
+      Converter.convertToDate(line(Columns.recordIdColumnIndexSecond.id)).getTime -
+        Converter.convertToDate(line(Columns.recordIdColumnIndexFirst.id)).getTime, TimeUnit.MILLISECONDS)
+      )).max
+    val uniqueBikes = table.map(line => line(Columns.recordIdColumnIndexEleventh.id)).distinct.length
     val percentMale = table.count(line => line.last == "1") * 100.0f / counterRow
     val percentFemale = table.count(line => line.last == "2") * 100.0f / counterRow
     val numberOfEmptyValues = table.map(list => list.count(_ == "")).sum
@@ -36,9 +44,9 @@ object ParsingLogic {
   }
 
   //task_5
-  def usageStats() {
-    val strPath = "/usage-stats.csv"
-    val groupMonth = table.groupBy(line => (Converter.convertToDate(line(Columns.columnIdFirst.id)).getMonth + 1))
+  def usageStats(): Unit = {
+    val strPath = config.getString("url.pathFileUsageStats")
+    val groupMonth = table.groupBy(line => (Converter.convertToDate(line(Columns.recordIdColumnIndexFirst.id)).getMonth + 1))
 
     val fieldsCSV = Array("January", "February", "March", "April", "May",
       "June", "July", "August", "September", "October", "November", "December")
@@ -56,15 +64,15 @@ object ParsingLogic {
 
 
   //task_6
-  def bikeStats() {
-    val strPath = "/bike-stats.csv"
+  def bikeStats(): Unit = {
+    val strPath = config.getString("url.pathFileBikeStats")
     val fieldsCSV = Array("bikeId", "number of trip", "time using")
 
     val groupBikeId = table
-      .map(strArr => (strArr(Columns.columnIdEleventh.id),
+      .map(strArr => (strArr(Columns.recordIdColumnIndexEleventh.id),
         TimeUnit.MINUTES.convert(
-          Converter.convertToDate(strArr(Columns.columnIdSecond.id)).getTime -
-            Converter.convertToDate(strArr(Columns.columnIdFirst.id)).getTime, TimeUnit.MILLISECONDS))
+          Converter.convertToDate(strArr(Columns.recordIdColumnIndexSecond.id)).getTime -
+            Converter.convertToDate(strArr(Columns.recordIdColumnIndexFirst.id)).getTime, TimeUnit.MILLISECONDS))
       )
       .groupBy(_._1)
 
@@ -77,16 +85,9 @@ object ParsingLogic {
     tableWriter(listOfRecords, strPath)
   }
 
-  private def tableReader(): List[Array[BikeInfo]] = {
-    Source.fromURL(getClass.getResource("/sources/201608-citibike-tripdata.csv"))
-      .getLines()
-      .map(_.replaceAll("\"", "").split(","))
-      .toList
-      .drop(Columns.columnIdFirst.id)
-  }
-
   private def tableWriter(listOfRecords: List[Array[BikeInfo]], strPath: String): Unit = {
-    val out = new BufferedWriter(new FileWriter("D:/Scala/WorkSpace/ScalaIntership/BikeData/src/main/resources/sources" + strPath))
+    val resourcesPath = config.getString("url.pathFilesStats")
+    val out = new BufferedWriter(new FileWriter(resourcesPath + strPath))
     new CSVWriter(out).writeAll(listOfRecords.asJava)
     out.close()
   }
