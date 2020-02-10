@@ -7,7 +7,7 @@ object Main extends App {
   val table = ReaderFile.tableWriter(config)
   val gp = GlobalParam(config, table)
 
-  GeneralStats.parserGeneralStats(gp)
+  //GeneralStats.parserGeneralStats(gp)
   UsageStats.parserUsageStats(gp)
-  BikeStats.parserBikeStats(gp)
+  //BikeStats.parserBikeStats(gp)
 }

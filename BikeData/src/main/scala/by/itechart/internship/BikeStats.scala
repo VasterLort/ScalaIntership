@@ -1,6 +1,6 @@
 package by.itechart.internship
 
-import java.util.concurrent.TimeUnit
+import java.time.temporal.ChronoUnit
 
 object BikeStats {
   def parserBikeStats(gp: GlobalParam): Unit = {
@@ -10,9 +10,9 @@ object BikeStats {
 
     val groupBikeId = gp.table
       .map(strArr => (strArr(Columns.bikeIdColumnIndex.id),
-        TimeUnit.MINUTES.convert(
-          Converter.convertToDate(strArr(Columns.stopTimeColumnIndex.id)).getTime -
-            Converter.convertToDate(strArr(Columns.startTimeColumnIndex.id)).getTime, TimeUnit.MILLISECONDS))
+        ChronoUnit.MINUTES.between(
+          Converter.convertToDate(strArr(Columns.startTimeColumnIndex.id)),
+          Converter.convertToDate(strArr(Columns.stopTimeColumnIndex.id))))
       )
       .groupBy(_._1)
 

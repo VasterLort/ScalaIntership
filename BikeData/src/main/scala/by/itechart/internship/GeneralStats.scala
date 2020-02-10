@@ -1,6 +1,6 @@
 package by.itechart.internship
 
-import java.util.concurrent.TimeUnit
+import java.time.temporal.ChronoUnit
 
 object GeneralStats {
   def parserGeneralStats(gp: GlobalParam): Unit = {
@@ -8,10 +8,10 @@ object GeneralStats {
       gp.config.getString("url.pathFileGeneralStats")
 
     val counterRow = gp.table.length;
-    val theLongestTrip = gp.table.map(line => (TimeUnit.MINUTES.convert
+    val theLongestTrip = gp.table.map(line => (ChronoUnit.MINUTES.between
     (
-      Converter.convertToDate(line(Columns.stopTimeColumnIndex.id)).getTime -
-        Converter.convertToDate(line(Columns.startTimeColumnIndex.id)).getTime, TimeUnit.MILLISECONDS)
+      Converter.convertToDate(line(Columns.startTimeColumnIndex.id)),
+      Converter.convertToDate(line(Columns.stopTimeColumnIndex.id)))
       )).max
     val uniqueBikes = gp.table.map(line => line(Columns.bikeIdColumnIndex.id)).distinct.length
     val percentMales = gp.table.count(line => line.last == gp.config.getString("fileCSV.genderMenValue")) * 100.0f / counterRow

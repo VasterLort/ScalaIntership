@@ -1,11 +1,19 @@
 package by.itechart.internship
 
-import java.text.SimpleDateFormat
-import java.util.Date
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatterBuilder
 
 object Converter {
-  def convertToDate(string: String): Date = {
-    val inputFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
-    inputFormat.parse(string)
+  private lazy val dateFormat = new DateTimeFormatterBuilder()
+    .parseCaseInsensitive()
+    .appendPattern("M/d/yyyy")
+    .appendLiteral(' ')
+    .appendPattern("HH:mm:ss")
+    .toFormatter()
+
+
+  def convertToDate(string: String): LocalDateTime = {
+    val dateUpdate = LocalDateTime.parse(string, dateFormat)
+    dateUpdate
   }
 }
