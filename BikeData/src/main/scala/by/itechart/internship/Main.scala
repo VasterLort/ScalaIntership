@@ -1,4 +1,4 @@
-package by.itechart
+package by.itechart.internship
 
 import com.typesafe.config.{Config, ConfigFactory}
 

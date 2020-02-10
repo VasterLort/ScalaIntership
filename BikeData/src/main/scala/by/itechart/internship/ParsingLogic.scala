@@ -1,4 +1,4 @@
-package by.itechart
+package by.itechart.internship
 
 import java.io.{BufferedWriter, FileWriter}
 import java.time.Month
@@ -17,7 +17,7 @@ case class ParsingLogic(bufferedSource: BufferedSource, config: Config) {
     .getLines()
     .map(_.replaceAll("\"", "").split(","))
     .toList
-    .drop(Columns.recordIdColumnIndexFirst.id)
+    .drop(config.getInt("fileCSV.nameColumns"))
 
   //task_4
   def generalStats(): Unit = {
@@ -26,10 +26,10 @@ case class ParsingLogic(bufferedSource: BufferedSource, config: Config) {
     val counterRow = table.length;
     val theLongestTrip = table.map(line => (TimeUnit.MINUTES.convert
     (
-      Converter.convertToDate(line(Columns.recordIdColumnIndexSecond.id)).getTime -
-        Converter.convertToDate(line(Columns.recordIdColumnIndexFirst.id)).getTime, TimeUnit.MILLISECONDS)
+      Converter.convertToDate(line(Columns.stopTimeColumnIndex.id)).getTime -
+        Converter.convertToDate(line(Columns.startTimeColumnIndex.id)).getTime, TimeUnit.MILLISECONDS)
       )).max
-    val uniqueBikes = table.map(line => line(Columns.recordIdColumnIndexEleventh.id)).distinct.length
+    val uniqueBikes = table.map(line => line(Columns.bikeIdColumnIndex.id)).distinct.length
     val percentMale = table.count(line => line.last == "1") * 100.0f / counterRow
     val percentFemale = table.count(line => line.last == "2") * 100.0f / counterRow
     val numberOfEmptyValues = table.map(list => list.count(_ == "")).sum
@@ -46,7 +46,7 @@ case class ParsingLogic(bufferedSource: BufferedSource, config: Config) {
   //task_5
   def usageStats(): Unit = {
     val strPath = config.getString("url.pathFileUsageStats")
-    val groupMonth = table.groupBy(line => (Converter.convertToDate(line(Columns.recordIdColumnIndexFirst.id)).getMonth + 1))
+    val groupMonth = table.groupBy(line => (Converter.convertToDate(line(Columns.startTimeColumnIndex.id)).getMonth + 1))
 
     val fieldsCSV = Array("January", "February", "March", "April", "May",
       "June", "July", "August", "September", "October", "November", "December")
@@ -69,18 +69,19 @@ case class ParsingLogic(bufferedSource: BufferedSource, config: Config) {
     val fieldsCSV = Array("bikeId", "number of trip", "time using")
 
     val groupBikeId = table
-      .map(strArr => (strArr(Columns.recordIdColumnIndexEleventh.id),
+      .map(strArr => (strArr(Columns.bikeIdColumnIndex.id),
         TimeUnit.MINUTES.convert(
-          Converter.convertToDate(strArr(Columns.recordIdColumnIndexSecond.id)).getTime -
-            Converter.convertToDate(strArr(Columns.recordIdColumnIndexFirst.id)).getTime, TimeUnit.MILLISECONDS))
+          Converter.convertToDate(strArr(Columns.stopTimeColumnIndex.id)).getTime -
+            Converter.convertToDate(strArr(Columns.startTimeColumnIndex.id)).getTime, TimeUnit.MILLISECONDS))
       )
       .groupBy(_._1)
 
-    val numTrip = groupBikeId.mapValues(_.size).toList
-    val timeUsing = groupBikeId.mapValues(_.map(_._2).sum).toList
+    val numTrip = groupBikeId.mapValues(_.size).toArray
+    val timeUsing = groupBikeId.mapValues(_.map(_._2).sum).toArray
 
-    val listOfMerge = (numTrip.map(line => line._1), numTrip.map(line => line._2.toString), timeUsing.map(line => line._2.toString)).zipped.toArray
-    val listOfRecords = List(fieldsCSV, listOfMerge.map(x => (x._1 + " " + x._2 + " " + x._3) + "\n"))
+
+    val listOfMerge = (numTrip.map(line => line._1), numTrip.map(line => line._2), timeUsing.map(line => line._2)).zipped.toArray.sortBy(-_._2)
+    val listOfRecords = List(fieldsCSV, listOfMerge.flatMap(row => Array(row._1 + " " + row._2 + " " + row._3 + " " + '\n')))
 
     tableWriter(listOfRecords, strPath)
   }

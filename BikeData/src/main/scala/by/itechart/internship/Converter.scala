@@ -1,4 +1,4 @@
-package by.itechart
+package by.itechart.internship
 
 import java.text.SimpleDateFormat
 import java.util.Date
