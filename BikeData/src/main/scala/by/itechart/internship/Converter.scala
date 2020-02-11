@@ -11,7 +11,6 @@ object Converter {
     .appendPattern("HH:mm:ss")
     .toFormatter()
 
-
   def convertToDate(string: String): LocalDateTime = {
     val dateUpdate = LocalDateTime.parse(string, dateFormat)
     dateUpdate

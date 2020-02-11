@@ -3,12 +3,11 @@ package by.itechart.internship
 import java.time.temporal.ChronoUnit
 
 object BikeStats {
-  def parserBikeStats(gp: GlobalParam): Unit = {
-    val strPath = gp.config.getString("url.pathFilesStats") +
-      gp.config.getString("url.pathFileBikeStats")
+  def parserBikeStats(configValues: ConfigValues, table: List[Array[String]]): Unit = {
+    val strPath = configValues.pathFilesStats + configValues.pathFileBikeStats
     val fieldsCSV = Array("bikeId", "number of trip", "time using")
 
-    val groupBikeId = gp.table
+    val groupBikeId = table
       .map(strArr => (strArr(Columns.bikeIdColumnIndex.id),
         ChronoUnit.MINUTES.between(
           Converter.convertToDate(strArr(Columns.startTimeColumnIndex.id)),
@@ -23,6 +22,6 @@ object BikeStats {
     val listOfMerge = (numTrip.map(line => line._1), numTrip.map(line => line._2), timeUsing.map(line => line._2)).zipped.toArray.sortBy(-_._2)
     val listOfRecords = List(fieldsCSV, listOfMerge.flatMap(row => Array(row._1 + " " + row._2 + " " + row._3 + " " + '\n')))
 
-    WriterFile.tableWriter(listOfRecords, strPath)
+    FileWriter.tableWriter(listOfRecords, strPath)
   }
 }
