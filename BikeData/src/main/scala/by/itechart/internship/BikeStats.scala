@@ -2,12 +2,20 @@ package by.itechart.internship
 
 import java.time.temporal.ChronoUnit
 
-object BikeStats {
-  def parserBikeStats(configValues: ConfigValues, table: List[Array[String]]): Unit = {
-    val strPath = configValues.pathFilesStats + configValues.pathFileBikeStats
-    val fieldsCSV = Array("bikeId", "number of trip", "time using")
+import org.slf4j.LoggerFactory
+import org.slf4s.Logger
 
-    val groupBikeId = table
+object BikeStats {
+  private lazy val logger = Logger(LoggerFactory.getLogger(this.getClass))
+
+  def logicController(configValues: ConfigValues, dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): Unit = {
+    val listOfBikesStats = parserBikeStats(configValues, dataTableOfTrips)
+    preparingDataForWriting(configValues, listOfBikesStats)
+  }
+
+  private def parserBikeStats(configValues: ConfigValues, dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): Array[NewTypes.BikeInfo] = {
+    logger.debug("Getting BikeStats from data...")
+    val groupBikeId = dataTableOfTrips
       .map(strArr => (strArr(Columns.bikeIdColumnIndex.id),
         ChronoUnit.MINUTES.between(
           Converter.convertToDate(strArr(Columns.startTimeColumnIndex.id)),
@@ -17,11 +25,15 @@ object BikeStats {
 
     val numTrip = groupBikeId.mapValues(_.size).toArray
     val timeUsing = groupBikeId.mapValues(_.map(_._2).sum).toArray
+    val listOfBikesStats = (numTrip.map(line => line._1), numTrip.map(line => line._2), timeUsing.map(line => line._2)).zipped.toArray.sortBy(-_._2)
+    listOfBikesStats.flatMap(row => Array(s"${row._1}, ${row._2}, ${row._3} \n"))
+  }
 
-
-    val listOfMerge = (numTrip.map(line => line._1), numTrip.map(line => line._2), timeUsing.map(line => line._2)).zipped.toArray.sortBy(-_._2)
-    val listOfRecords = List(fieldsCSV, listOfMerge.flatMap(row => Array(row._1 + " " + row._2 + " " + row._3 + " " + '\n')))
-
+  private def preparingDataForWriting(configValues: ConfigValues, listOfBikeStats: Array[NewTypes.BikeInfo]): Unit = {
+    logger.debug("Preparing data for writing...")
+    val strPath = configValues.pathFilesStats + configValues.pathFileBikeStats
+    val fieldsCSV = Array("bikeId", "number of trip", "time using")
+    val listOfRecords = List(fieldsCSV, listOfBikeStats)
     FileWriter.tableWriter(listOfRecords, strPath)
   }
 }
