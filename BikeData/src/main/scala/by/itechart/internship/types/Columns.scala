@@ -1,4 +1,4 @@
-package by.itechart.internship
+package by.itechart.internship.types
 
 object Columns extends Enumeration {
   val tripDurationColumnIndex = Value(0)

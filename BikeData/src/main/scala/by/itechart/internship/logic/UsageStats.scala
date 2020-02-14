@@ -1,7 +1,9 @@
-package by.itechart.internship
+package by.itechart.internship.logic
 
 import java.time.Month
 
+import by.itechart.internship.config.LightBendConfig
+import by.itechart.internship.types.{Columns, NewTypes}
 import org.slf4j.LoggerFactory
 import org.slf4s.Logger
 
@@ -10,12 +12,12 @@ object UsageStats {
 
   private lazy val logger = Logger(LoggerFactory.getLogger(this.getClass))
 
-  def logicController(configValues: ConfigValues, dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): Unit = {
+  def logicController(configValues: LightBendConfig, dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): Unit = {
     val listOfMonthsStats = parserUsageStats(configValues, dataTableOfTrips)
     preparingDataForWriting(configValues, listOfMonthsStats)
   }
 
-  private def parserUsageStats(configValues: ConfigValues, dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): Array[NewTypes.BikeInfo] = {
+  private def parserUsageStats(configValues: LightBendConfig, dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): Array[NewTypes.BikeInfo] = {
     logger.debug("Getting UsageStats from data...")
     val groupMonth = dataTableOfTrips
       .groupBy(line => Converter.convertToDate(line(Columns.startTimeColumnIndex.id)).getMonth.getValue)
@@ -29,7 +31,7 @@ object UsageStats {
     listOfMonthsStats
   }
 
-  private def preparingDataForWriting(configValues: ConfigValues, listOfMonthsStats: Array[NewTypes.BikeInfo]): Unit = {
+  private def preparingDataForWriting(configValues: LightBendConfig, listOfMonthsStats: Array[NewTypes.BikeInfo]): Unit = {
     logger.debug("Preparing data for writing...")
     val strPath = configValues.pathFilesStats + configValues.pathFileUsageStats
     val fieldsCSV = Array("January", "February", "March", "April", "May",

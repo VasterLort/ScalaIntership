@@ -25,7 +25,7 @@ CREATE TABLE station(
 CREATE TABLE bike(
 	id_bike BIGSERIAL,
 	date_of_appearance DATE NOT NULL,
-	last_using DATE,
+	last_usage DATE,
 	PRIMARY KEY (id_bike)
 );
 

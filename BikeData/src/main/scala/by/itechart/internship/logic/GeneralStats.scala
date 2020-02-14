@@ -1,20 +1,21 @@
-package by.itechart.internship
+package by.itechart.internship.logic
 
 import java.time.temporal.ChronoUnit
 
-import by.itechart.internship.BikeStats.logger
+import by.itechart.internship.config.LightBendConfig
+import by.itechart.internship.types.{Columns, NewTypes}
 import org.slf4j.LoggerFactory
 import org.slf4s.Logger
 
 object GeneralStats {
   private lazy val logger = Logger(LoggerFactory.getLogger(this.getClass))
 
-  def logicController(configValues: ConfigValues, dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): Unit = {
+  def logicController(configValues: LightBendConfig, dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): Unit = {
     val listOfGeneralStats = parserGeneralStats(configValues, dataTableOfTrips)
     preparingDataForWriting(configValues, listOfGeneralStats)
   }
 
-  private def parserGeneralStats(configValues: ConfigValues, dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): Array[NewTypes.BikeInfo] = {
+  private def parserGeneralStats(configValues: LightBendConfig, dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): Array[NewTypes.BikeInfo] = {
     logger.debug("Getting GeneralStats from data...")
     val counterRow = dataTableOfTrips.length;
     val theLongestTrip = dataTableOfTrips.map(line => (ChronoUnit.MINUTES.between
@@ -32,7 +33,7 @@ object GeneralStats {
     listOfGeneralStats
   }
 
-  private def preparingDataForWriting(configValues: ConfigValues, listOfGeneralStats: Array[NewTypes.BikeInfo]): Unit = {
+  private def preparingDataForWriting(configValues: LightBendConfig, listOfGeneralStats: Array[NewTypes.BikeInfo]): Unit = {
     logger.debug("Preparing data for writing...")
     val strPath = configValues.pathFilesStats + configValues.pathFileGeneralStats
     val fieldsCSV = Array("number of trips", "the longest trip", "unique bikes",

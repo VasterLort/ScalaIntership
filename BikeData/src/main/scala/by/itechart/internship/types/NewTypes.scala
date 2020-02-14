@@ -1,4 +1,4 @@
-package by.itechart.internship
+package by.itechart.internship.types
 
 object NewTypes {
   type BikeInfo = String

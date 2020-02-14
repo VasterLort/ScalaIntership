@@ -1,8 +1,9 @@
-package by.itechart.internship
+package by.itechart.internship.logic
 
 import java.io.{BufferedWriter, FileWriter}
 
 import au.com.bytecode.opencsv.CSVWriter
+import by.itechart.internship.types.NewTypes
 import org.slf4j.LoggerFactory
 import org.slf4s.Logger
 

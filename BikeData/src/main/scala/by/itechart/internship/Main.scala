@@ -1,5 +1,8 @@
 package by.itechart.internship
 
+import by.itechart.internship.config.LightBendConfig
+import by.itechart.internship.logic.{BikeStats, FileReader, GeneralStats, UsageStats}
+
 import scala.util.{Failure, Success, Try}
 
 object Main extends App {
