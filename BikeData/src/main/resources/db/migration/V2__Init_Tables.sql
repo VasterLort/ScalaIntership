@@ -1,44 +1,44 @@
 CREATE TABLE user_type(
-	id_user_type BIGSERIAL,
+	user_type_id BIGSERIAL,
 	name_user_type VARCHAR (20) NOT NULL,
 	description_name_user_type VARCHAR (50) NOT NULL,
-	PRIMARY KEY (id_user_type)
+	PRIMARY KEY (user_type_id)
 );
 
 CREATE TABLE user_info(
-	id_user BIGSERIAL,
-	id_gender gender NOT NULL ,
-	id_user_type BIGINT NOT NULL,
+	user_id BIGSERIAL,
+	gender_id gender NOT NULL ,
+	user_type_id BIGINT NOT NULL,
 	year_of_birth INT NOT NULL,
-	PRIMARY KEY (id_user),
-	FOREIGN KEY (id_user_type) REFERENCES user_type(id_user_type)
+	PRIMARY KEY (user_id),
+	FOREIGN KEY (user_type_id) REFERENCES user_type(user_type_id)
 );
 
 CREATE TABLE station(
-	id_station BIGSERIAL,
+	station_id BIGINT NOT NULL,
 	name_station VARCHAR (50) NOT NULL,
 	latitude DOUBLE PRECISION NOT NULL,
 	longitude DOUBLE PRECISION NOT NULL,
-	PRIMARY KEY (id_station)
+	PRIMARY KEY (station_id)
 );
 
 CREATE TABLE bike(
-	id_bike BIGSERIAL,
+	bike_id BIGSERIAL,
 	date_of_appearance DATE NOT NULL,
 	last_usage DATE,
-	PRIMARY KEY (id_bike)
+	PRIMARY KEY (bike_id)
 );
 
 CREATE TABLE trip(
-	id_trip BIGSERIAL,
+	trip_id BIGSERIAL,
 	trip_duration bigint,
-	id_station_start bigint,
-	id_station_end bigint,
-	id_user bigint,
-	id_bike bigint,
-	PRIMARY KEY (id_trip),
-	FOREIGN KEY (id_station_start) REFERENCES station(id_station),
-	FOREIGN KEY (id_station_end) REFERENCES station(id_station),
-	FOREIGN KEY (id_user) REFERENCES user_info(id_user),
-	FOREIGN KEY (id_bike) REFERENCES bike(id_bike)
+	station_start_id bigint,
+	station_end_id bigint,
+	user_id bigint,
+	bike_id bigint,
+	PRIMARY KEY (trip_id),
+	FOREIGN KEY (station_start_id) REFERENCES station(station_id),
+	FOREIGN KEY (station_end_id) REFERENCES station(station_id),
+	FOREIGN KEY (user_id) REFERENCES user_info(user_id),
+	FOREIGN KEY (bike_id) REFERENCES bike(bike_id)
 );

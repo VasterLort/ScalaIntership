@@ -1,7 +1,7 @@
-package by.itechart.internship.entity
+package by.itechart.internship.entities
 
 case class Station(
-                    id_station: Long = 0L,
+                    station_id: Long,
                     name_station: String,
                     latitude: Double,
                     longitude: Double
