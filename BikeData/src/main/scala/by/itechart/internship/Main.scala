@@ -18,7 +18,7 @@ object Main extends App {
       /*GeneralStats.logicController(configValues, dataTableOfTrips)
       UsageStats.logicController(configValues, dataTableOfTrips)
       BikeStats.logicController(configValues, dataTableOfTrips)*/
-      ObjectSetter.stationSetter(dataTableOfTrips)
+      ObjectSetter.logicController(dataTableOfTrips)
     }
     case Failure(e) => println(s"An error has occured, cause: $e")
   }

@@ -3,7 +3,7 @@ package by.itechart.internship.logic
 import java.time.temporal.ChronoUnit
 
 import by.itechart.internship.config.LightBendConfig
-import by.itechart.internship.types.{Columns, NewTypes}
+import by.itechart.internship.types.{ColumnsEnum, NewTypes}
 import org.slf4j.LoggerFactory
 import org.slf4s.Logger
 
@@ -18,10 +18,10 @@ object BikeStats {
   private def parserBikeStats(configValues: LightBendConfig, dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): Array[NewTypes.BikeInfo] = {
     logger.debug("Getting BikeStats from data...")
     val groupBikeId = dataTableOfTrips
-      .map(strArr => (strArr(Columns.bikeIdColumnIndex.id),
+      .map(line => (line(ColumnsEnum.bikeIdColumnIndex.id),
         ChronoUnit.MINUTES.between(
-          Converter.convertToDate(strArr(Columns.startTimeColumnIndex.id)),
-          Converter.convertToDate(strArr(Columns.stopTimeColumnIndex.id))))
+          Converter.convertToDate(line(ColumnsEnum.startTimeColumnIndex.id)),
+          Converter.convertToDate(line(ColumnsEnum.stopTimeColumnIndex.id))))
       )
       .groupBy(_._1)
 

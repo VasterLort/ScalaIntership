@@ -9,7 +9,7 @@ CREATE TABLE user_info(
 	user_id BIGSERIAL,
 	gender_id gender NOT NULL ,
 	user_type_id BIGINT NOT NULL,
-	year_of_birth INT NOT NULL,
+	year_of_birth INT,
 	PRIMARY KEY (user_id),
 	FOREIGN KEY (user_type_id) REFERENCES user_type(user_type_id)
 );
@@ -23,14 +23,14 @@ CREATE TABLE station(
 );
 
 CREATE TABLE bike(
-	bike_id BIGSERIAL,
-	date_of_appearance DATE NOT NULL,
-	last_usage DATE,
+	bike_id BIGINT NOT NULL,
+	date_of_appearance VARCHAR (50),
+	last_usage VARCHAR (50),
 	PRIMARY KEY (bike_id)
 );
 
 CREATE TABLE trip(
-	trip_id BIGSERIAL,
+	trip_id BIGINT NOT NULL,
 	trip_duration bigint,
 	station_start_id bigint,
 	station_end_id bigint,

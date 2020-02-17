@@ -1,1 +1,1 @@
-CREATE TYPE gender AS ENUM ('unknown', 'male', 'female');
+CREATE TYPE gender AS ENUM ('0', '1', '2');

@@ -3,7 +3,7 @@ package by.itechart.internship.logic
 import java.time.Month
 
 import by.itechart.internship.config.LightBendConfig
-import by.itechart.internship.types.{Columns, NewTypes}
+import by.itechart.internship.types.{ColumnsEnum, NewTypes}
 import org.slf4j.LoggerFactory
 import org.slf4s.Logger
 
@@ -20,7 +20,7 @@ object UsageStats {
   private def parserUsageStats(configValues: LightBendConfig, dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): Array[NewTypes.BikeInfo] = {
     logger.debug("Getting UsageStats from data...")
     val groupMonth = dataTableOfTrips
-      .groupBy(line => Converter.convertToDate(line(Columns.startTimeColumnIndex.id)).getMonth.getValue)
+      .groupBy(line => Converter.convertToDate(line(ColumnsEnum.startTimeColumnIndex.id)).getMonth.getValue)
 
     val arrayMonths = Array(
       Month.JANUARY, Month.FEBRUARY, Month.MARCH, Month.APRIL,

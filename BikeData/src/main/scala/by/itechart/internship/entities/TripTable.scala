@@ -3,7 +3,7 @@ package by.itechart.internship.entities
 import slick.jdbc.PostgresProfile.api._
 
 class TripTable(tag: Tag) extends Table[Trip](tag, "trip") {
-  def trip_id = column[Long]("trip_id", O.PrimaryKey, O.AutoInc)
+  def trip_id = column[Long]("trip_id", O.PrimaryKey)
 
   def trip_duration = column[Long]("trip_duration")
 
