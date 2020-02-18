@@ -1,6 +1,6 @@
 package by.itechart.internship.logic
 
-import java.time.LocalDateTime
+import java.time.{LocalDate, LocalDateTime}
 import java.time.format.DateTimeFormatterBuilder
 
 object Converter {
@@ -15,4 +15,5 @@ object Converter {
     val dateUpdate = LocalDateTime.parse(string, dateFormat)
     dateUpdate
   }
+
 }

@@ -1,8 +1,10 @@
 package by.itechart.internship.entities
 
+import by.itechart.internship.logic.Gender.Gender
+
 case class UserInfo(
-                     user_id: Long = 0L,
-                     gender_id: Long,
-                     user_type_id: Long,
-                     year_of_birth: Int
+                     gender: Gender,
+                     user_type: String,
+                     year_of_birth: String,
+                     user_id: Long = 0L
                    )

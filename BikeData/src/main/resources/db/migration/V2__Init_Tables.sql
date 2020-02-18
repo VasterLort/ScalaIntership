@@ -1,17 +1,9 @@
-CREATE TABLE user_type(
-	user_type_id BIGSERIAL,
-	name_user_type VARCHAR (20) NOT NULL,
-	description_name_user_type VARCHAR (50) NOT NULL,
-	PRIMARY KEY (user_type_id)
-);
-
 CREATE TABLE user_info(
 	user_id BIGSERIAL,
-	gender_id gender NOT NULL ,
-	user_type_id BIGINT NOT NULL,
-	year_of_birth INT,
-	PRIMARY KEY (user_id),
-	FOREIGN KEY (user_type_id) REFERENCES user_type(user_type_id)
+	gender gender NOT NULL ,
+	user_type user_type NOT NULL,
+	year_of_birth VARCHAR (8),
+	PRIMARY KEY (user_id)
 );
 
 CREATE TABLE station(

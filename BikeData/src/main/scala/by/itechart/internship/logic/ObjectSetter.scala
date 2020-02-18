@@ -9,57 +9,52 @@ import scala.concurrent.{Await, Future}
 
 object ObjectSetter {
   def logicController(dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): Unit = {
-    stationSetter(dataTableOfTrips)
+    //stationSetter(dataTableOfTrips)
+    //bikeSetter(dataTableOfTrips)
+    userInfoSetter(dataTableOfTrips)
   }
 
   private def stationSetter(dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): Unit = {
     val messages = TableQuery[StationTable]
 
-    val startStationsValues = dataTableOfTrips.map(line =>
+    val startStationValues = dataTableOfTrips.map(line =>
       Station(line(ColumnsEnum.starStationIdColumnIndex.id).toLong, line(ColumnsEnum.startStationNameColumnIndex.id),
         line(ColumnsEnum.startStationLatitudeColumnIndex.id).toDouble, line(ColumnsEnum.startStationLongitudeColumnIndex.id) toDouble))
 
-    val endStationsValues = dataTableOfTrips.map(line =>
+    val endStationValues = dataTableOfTrips.map(line =>
       Station(line(ColumnsEnum.endStationIdColumnIndex.id).toLong, line(ColumnsEnum.endStationNameColumnIndex.id),
         line(ColumnsEnum.endStationLatitudeColumnIndex.id).toDouble, line(ColumnsEnum.endStationLongitudeColumnIndex.id) toDouble))
 
-    val stationValues = (startStationsValues ++ endStationsValues).distinct
+    val stationValues = (startStationValues ++ endStationValues).distinct
     val insert: DBIO[Option[Int]] = messages ++= stationValues
     insertData(insert)
   }
 
-/*  private def bikeSetter(dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): Unit = {
+  private def bikeSetter(dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): Unit = {
     val messages = TableQuery[BikeTable]
 
-    val bikesValues = dataTableOfTrips.map(line => (
-      line(ColumnsEnum.bikeIdColumnIndex.id),
-      Converter.convertToDate(line(ColumnsEnum.startTimeColumnIndex.id)),
-      Converter.convertToDate(line(ColumnsEnum.stopTimeColumnIndex.id)))
-    )
-      .groupBy(_._1)
-      .mapValues(x => x.map(_._2).min.toString, x.map(_._3).max.toString)
+    val bikeValues = dataTableOfTrips.map(line =>
+      Bike(line(ColumnsEnum.bikeIdColumnIndex.id).toLong, "Not Value", "Not Value")).distinct
 
-    val insert: DBIO[Option[Int]] = messages ++= bikesValues
+    val insert: DBIO[Option[Int]] = messages ++= bikeValues
     insertData(insert)
-  }*/
+  }
 
-  /*private def userInfoSetter(dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): Unit = {
+  private def userInfoSetter(dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): Unit = {
     val messages = TableQuery[UserInfoTable]
 
-    val userInfoValues = dataTableOfTrips.map(line =>
-      UserInfo.apply(
-        line(ColumnsEnum.genderColumnIndex.id).toLong,
-        line(ColumnsEnum.userTypeColumnIndex.id).toLong,
-        line(ColumnsEnum.birthYearColumnIndex.id).toInt))
-      .distinct
+    val userInfoValues = Array(UserInfo(
+      Gender.unknown,
+      "Subscriber",
+      "2222"))
 
     val insert: DBIO[Option[Int]] = messages ++= userInfoValues
     insertData(insert)
-  }*/
+  }
 
   private def insertData(insert: DBIO[Option[Int]]): Unit = {
     val db = Database.forConfig("database")
     val insertAction: Future[Option[Int]] = db.run(insert)
-    val rowCount = Await.result(insertAction, 2.second)
+    val rowCount = Await.result(insertAction, 360.second)
   }
 }
