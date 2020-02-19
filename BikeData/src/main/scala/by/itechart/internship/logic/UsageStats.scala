@@ -3,9 +3,8 @@ package by.itechart.internship.logic
 import java.time.Month
 
 import by.itechart.internship.config.LightBendConfig
-import by.itechart.internship.entities.{Trip, TripTable}
-import by.itechart.internship.logic.GeneralStats.{parserGeneralStats, preparingDataForWriting}
-import by.itechart.internship.types.{ColumnsEnum, NewTypes}
+import by.itechart.internship.entities.Trip
+import by.itechart.internship.types.NewTypes
 import org.slf4j.LoggerFactory
 import org.slf4s.Logger
 
@@ -13,7 +12,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 object UsageStats {
-  /*type MonthInfo = String
+  type MonthInfo = String
 
   private lazy val logger = Logger(LoggerFactory.getLogger(this.getClass))
 
@@ -36,6 +35,7 @@ object UsageStats {
       Month.OCTOBER, Month.NOVEMBER, Month.DECEMBER
     )
     val listOfMonthsStats = checkMonth(groupMonth, arrayMonths)
+    listOfMonthsStats.foreach(println)
     listOfMonthsStats
   }
 
@@ -48,8 +48,8 @@ object UsageStats {
     FileWriter.tableWriter(listOfRecords, strPath)
   }
 
-  private def checkMonth(groupMonth: Map[Int, List[Array[MonthInfo]]], arrayMonths: Trip): Array[MonthInfo] = {
+  private def checkMonth(groupMonth: Map[Int, List[Trip]], arrayMonths: Array[Month]): Array[MonthInfo] = {
     val numOfMonths = arrayMonths.map(x => groupMonth.mapValues(_.size).get(x.getValue).map(_.toString).getOrElse("Not Value"))
     numOfMonths
-  }*/
+  }
 }

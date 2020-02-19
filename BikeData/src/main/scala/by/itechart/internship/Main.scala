@@ -1,7 +1,7 @@
 package by.itechart.internship
 
 import by.itechart.internship.config.{FlywayConfig, LightBendConfig}
-import by.itechart.internship.logic.{BikeStats, DatabaseReader, DatabaseWriter, FileReader, GeneralStats}
+import by.itechart.internship.logic._
 
 import scala.util.{Failure, Success, Try}
 
@@ -17,12 +17,12 @@ object Main extends App {
 
       //DatabaseWriter.logicController(dataTableOfTrips)
       val dataTrips = DatabaseReader.writer()
-      GeneralStats.logicController(configValues, dataTrips)
+      //GeneralStats.logicController(configValues, dataTrips)
       //UsageStats.logicController(configValues, dataTrips)
-      BikeStats.logicController(configValues, dataTrips)
+      //BikeStats.logicController(configValues, dataTrips)
     }
     case Failure(e) => println(s"An error has occured, cause: $e")
   }
 
-  Thread.sleep(20000000)
+  Thread.sleep(60000)
 }
