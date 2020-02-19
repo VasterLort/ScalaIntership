@@ -1,27 +1,24 @@
 package by.itechart.internship.entities
 
-import by.itechart.internship.logic.Gender
-import by.itechart.internship.logic.Gender.Gender
-import slick.jdbc.PostgresProfile.api._
+
+import by.itechart.internship.types.GenderEnum.Gender
+import by.itechart.internship.logic.MyPostgresDriver.api._
+import by.itechart.internship.types.UserTypeEnum.UserType
 
 case class UserInfo(
                      gender: Gender,
-                     user_type: String,
-                     year_of_birth: String,
-                     user_id: Long = 0L
+                     userType: UserType,
+                     yearOfBirth: String,
+                     userId: Long = 0L
                    )
 
 class UserInfoTable(tag: Tag) extends Table[UserInfo](tag, "user_info") {
-  implicit val GenderMapper = MappedColumnType.base[Gender, String](
-    e => e.toString,
-    s => Gender.withName(s)
-  )
 
   def userId = column[Long]("user_id", O.PrimaryKey, O.AutoInc)
 
   def gender = column[Gender]("gender")
 
-  def userType = column[String]("user_type")
+  def userType = column[UserType]("user_type")
 
   def yearOfBirth = column[String]("year_of_birth")
 

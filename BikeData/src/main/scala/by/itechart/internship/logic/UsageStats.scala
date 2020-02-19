@@ -3,24 +3,32 @@ package by.itechart.internship.logic
 import java.time.Month
 
 import by.itechart.internship.config.LightBendConfig
+import by.itechart.internship.entities.{Trip, TripTable}
+import by.itechart.internship.logic.GeneralStats.{parserGeneralStats, preparingDataForWriting}
 import by.itechart.internship.types.{ColumnsEnum, NewTypes}
 import org.slf4j.LoggerFactory
 import org.slf4s.Logger
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
 object UsageStats {
-  type MonthInfo = String
+  /*type MonthInfo = String
 
   private lazy val logger = Logger(LoggerFactory.getLogger(this.getClass))
 
-  def logicController(configValues: LightBendConfig, dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): Unit = {
-    val listOfMonthsStats = parserUsageStats(configValues, dataTableOfTrips)
-    preparingDataForWriting(configValues, listOfMonthsStats)
+  def logicController(configValues: LightBendConfig, dataTableOfTrips: Future[List[Trip]]): Unit = {
+    dataTableOfTrips.map {
+      vector =>
+        val listOfMonthsStats = parserUsageStats(configValues, vector)
+        preparingDataForWriting(configValues, listOfMonthsStats)
+    }
   }
 
-  private def parserUsageStats(configValues: LightBendConfig, dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): Array[NewTypes.BikeInfo] = {
+  private def parserUsageStats(configValues: LightBendConfig, dataTableOfTrips: List[Trip]): Array[NewTypes.BikeInfo] = {
     logger.debug("Getting UsageStats from data...")
     val groupMonth = dataTableOfTrips
-      .groupBy(line => Converter.convertToDate(line(ColumnsEnum.startTimeColumnIndex.id)).getMonth.getValue)
+      .groupBy(trip => Converter.convertToDate(trip.startTime).getMonth.getValue)
 
     val arrayMonths = Array(
       Month.JANUARY, Month.FEBRUARY, Month.MARCH, Month.APRIL,
@@ -40,8 +48,8 @@ object UsageStats {
     FileWriter.tableWriter(listOfRecords, strPath)
   }
 
-  private def checkMonth(groupMonth: Map[Int, List[Array[MonthInfo]]], arrayMonths: Array[Month]): Array[MonthInfo] = {
+  private def checkMonth(groupMonth: Map[Int, List[Array[MonthInfo]]], arrayMonths: Trip): Array[MonthInfo] = {
     val numOfMonths = arrayMonths.map(x => groupMonth.mapValues(_.size).get(x.getValue).map(_.toString).getOrElse("Not Value"))
     numOfMonths
-  }
+  }*/
 }

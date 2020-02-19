@@ -20,3 +20,5 @@ libraryDependencies ++= Seq(
 )
 
 libraryDependencies += "org.flywaydb" % "flyway-sbt" % "4.2.0"
+
+libraryDependencies += "com.github.tminglei" %% "slick-pg" % "0.18.1"

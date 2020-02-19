@@ -1,6 +1,6 @@
 package by.itechart.internship.types
 
 object UserTypeEnum extends Enumeration {
-  val userTypeCustomer = Value("Customer")
-  val userTypeSubscriber = Value("Subscriber")
+  type UserType = Value
+  val Customer, Subscriber = Value
 }

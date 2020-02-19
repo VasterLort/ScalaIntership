@@ -3,8 +3,8 @@ package by.itechart.internship.entities
 import slick.jdbc.PostgresProfile.api._
 
 case class Station(
-                    station_id: Long,
-                    name_station: String,
+                    stationId: Long,
+                    nameStation: String,
                     latitude: Double,
                     longitude: Double
                   )

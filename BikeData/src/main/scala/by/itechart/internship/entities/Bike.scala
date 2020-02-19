@@ -3,9 +3,9 @@ package by.itechart.internship.entities
 import slick.jdbc.PostgresProfile.api._
 
 case class Bike(
-                 bike_id: Long,
-                 date_of_appearance: String,
-                 last_usage: String
+                 bikeId: Long,
+                 dateOfAppearance: String,
+                 lastUsage: String
                )
 
 class BikeTable(tag: Tag) extends Table[Bike](tag, "bike") {

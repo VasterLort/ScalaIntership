@@ -1,8 +1,8 @@
 CREATE TABLE user_info(
 	user_id BIGSERIAL,
-	gender gender NOT NULL ,
-	user_type user_type NOT NULL,
-	year_of_birth VARCHAR (8),
+	gender Gender NOT NULL,
+	user_type usertype NOT NULL,
+	year_of_birth VARCHAR (10),
 	PRIMARY KEY (user_id)
 );
 
@@ -22,12 +22,14 @@ CREATE TABLE bike(
 );
 
 CREATE TABLE trip(
-	trip_id BIGINT NOT NULL,
-	trip_duration bigint,
-	station_start_id bigint,
-	station_end_id bigint,
-	user_id bigint,
-	bike_id bigint,
+	trip_id BIGSERIAL,
+	trip_duration BIGINT,
+	station_start_id BIGINT,
+	station_end_id BIGINT,
+	user_id BIGSERIAL,
+	bike_id BIGINT,
+	start_time VARCHAR (20),
+	end_time VARCHAR (20),
 	PRIMARY KEY (trip_id),
 	FOREIGN KEY (station_start_id) REFERENCES station(station_id),
 	FOREIGN KEY (station_end_id) REFERENCES station(station_id),

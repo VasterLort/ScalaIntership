@@ -21,11 +21,14 @@ object FileWriter {
         csvWriter.writeAll(
           listOfRecords.asJava
         )
+        logger.debug("Completed...")
         csvWriter.close()
       } match {
         case f@Failure(_) =>
           Try(csvWriter.close()).recoverWith {
-            case _ => f
+            case _ =>
+              logger.debug("Error ... = " + f)
+              f
           }
         case success => success
       }

@@ -1,2 +1,2 @@
-CREATE TYPE gender AS ENUM ('0', '1', '2');
-CREATE TYPE user_type AS ENUM ('Customer', 'Subscriber');
+CREATE TYPE gender AS ENUM ('unknown', 'male', 'female');
+CREATE TYPE usertype AS ENUM ('Customer', 'Subscriber');
