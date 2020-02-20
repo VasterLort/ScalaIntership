@@ -9,6 +9,7 @@ import scala.concurrent.{Await, Future}
 
 object DatabaseWriter {
   def logicController(dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): Unit = {
+    deleteData()
     stationSetter(dataTableOfTrips)
     bikeSetter(dataTableOfTrips)
     userInfoSetter(dataTableOfTrips)
@@ -77,5 +78,16 @@ object DatabaseWriter {
     val db = Database.forConfig("database")
     val insertAction: Future[Option[Int]] = db.run(insert)
     val rowCount = Await.result(insertAction, 720.second)
+    db.close()
+  }
+
+  private def deleteData(): Unit = {
+    val db = Database.forConfig("database")
+
+    Await.result(db.run(TableQuery[TripTable].delete), 120.seconds)
+    Await.result(db.run(TableQuery[UserInfoTable].delete), 120.seconds)
+    Await.result(db.run(TableQuery[StationTable].delete), 120.seconds)
+    Await.result(db.run(TableQuery[BikeTable].delete), 120.seconds)
+    db.close()
   }
 }

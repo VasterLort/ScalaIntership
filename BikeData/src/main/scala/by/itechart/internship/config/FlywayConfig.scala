@@ -8,7 +8,8 @@ object FlywayConfig {
     flyway.setDataSource(
       configValues.databaseUrl,
       configValues.databaseUsername,
-      configValues.databasePassword)
+      configValues.databasePassword
+    )
     flyway.migrate()
   }
 }
