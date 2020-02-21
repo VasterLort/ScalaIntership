@@ -18,4 +18,5 @@ object MyPostgresDriver extends PostgresProfile with PgEnumSupport {
     implicit val userTypeColumnExtensionMethodsBuilder = createEnumOptionColumnExtensionMethodsBuilder(UserTypeEnum)
     implicit val userOptionColumnExtensionMethodsBuilder = createEnumOptionColumnExtensionMethodsBuilder(UserTypeEnum)
   }
+
 }

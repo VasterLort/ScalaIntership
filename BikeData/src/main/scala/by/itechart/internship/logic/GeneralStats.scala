@@ -3,23 +3,18 @@ package by.itechart.internship.logic
 import java.time.temporal.ChronoUnit
 
 import by.itechart.internship.config.LightBendConfig
-import by.itechart.internship.entities.{Trip, TripInfo}
+import by.itechart.internship.entities.TripInfo
 import by.itechart.internship.types.{GenderEnum, NewTypes}
 import org.slf4j.LoggerFactory
 import org.slf4s.Logger
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-
 object GeneralStats {
   private lazy val logger = Logger(LoggerFactory.getLogger(this.getClass))
 
-  def logicController(configValues: LightBendConfig, dataTableOfTrips: Future[List[TripInfo]]): Unit = {
-    dataTableOfTrips.map {
-      vector =>
-        val listOfGeneralStats = parserGeneralStats(configValues, vector)
-        preparingDataForWriting(configValues, listOfGeneralStats)
-    }
+  def logicController(configValues: LightBendConfig, dataTableOfTrips: List[TripInfo]): StatsInfo = {
+    val listOfGeneralStats = parserGeneralStats(configValues, dataTableOfTrips)
+    preparingDataForWriting(configValues, listOfGeneralStats)
+
   }
 
   private def parserGeneralStats(configValues: LightBendConfig, dataTableOfTrips: List[TripInfo]): Array[NewTypes.BikeInfo] = {
@@ -39,12 +34,12 @@ object GeneralStats {
       uniqueBikes.toString, percentMales.toString, percentFemales.toString, numberOfEmptyValues.toString)
   }
 
-  private def preparingDataForWriting(configValues: LightBendConfig, listOfGeneralStats: Array[NewTypes.BikeInfo]): Unit = {
+  private def preparingDataForWriting(configValues: LightBendConfig, listOfGeneralStats: Array[NewTypes.BikeInfo]): StatsInfo = {
     logger.debug("Preparing data for writing...")
     val strPath = configValues.pathFilesStats + configValues.pathFileGeneralStats
     val fieldsCSV = Array("number of trips", "the longest trip", "unique bikes",
       "percentage of men", "percentage of women", "number of empty values")
-    val listOfRecords = List(fieldsCSV, listOfGeneralStats)
-    FileWriter.tableWriter(listOfRecords, strPath)
+    val listOfStats = StatsInfo(List(fieldsCSV, listOfGeneralStats), strPath)
+    listOfStats
   }
 }

@@ -1,6 +1,6 @@
 package by.itechart.internship.entities
 
-import slick.jdbc.PostgresProfile.api._
+import by.itechart.internship.logic.MyPostgresDriver.api._
 
 case class Trip(
                  tripDuration: Long,
@@ -12,7 +12,6 @@ case class Trip(
                  userId: Long = 0L,
                  tripId: Long = 0L
                )
-
 
 
 class TripTable(tag: Tag) extends Table[Trip](tag, "trip") {

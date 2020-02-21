@@ -1,6 +1,6 @@
 package by.itechart.internship.logic
 
-import java.time.{LocalDate, LocalDateTime}
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatterBuilder
 
 object Converter {

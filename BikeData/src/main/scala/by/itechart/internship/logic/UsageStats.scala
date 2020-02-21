@@ -3,25 +3,20 @@ package by.itechart.internship.logic
 import java.time.Month
 
 import by.itechart.internship.config.LightBendConfig
-import by.itechart.internship.entities.{Trip, TripInfo}
+import by.itechart.internship.entities.TripInfo
 import by.itechart.internship.types.NewTypes
 import org.slf4j.LoggerFactory
 import org.slf4s.Logger
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 
 object UsageStats {
   type MonthInfo = String
 
   private lazy val logger = Logger(LoggerFactory.getLogger(this.getClass))
 
-  def logicController(configValues: LightBendConfig, dataTableOfTrips: Future[List[TripInfo]]): Unit = {
-    dataTableOfTrips.map {
-      vector =>
-        val listOfMonthsStats = parserUsageStats(configValues, vector)
-        preparingDataForWriting(configValues, listOfMonthsStats)
-    }
+  def logicController(configValues: LightBendConfig, dataTableOfTrips: List[TripInfo]): StatsInfo = {
+    val listOfMonthsStats = parserUsageStats(configValues, dataTableOfTrips)
+    preparingDataForWriting(configValues, listOfMonthsStats)
+
   }
 
   private def parserUsageStats(configValues: LightBendConfig, dataTableOfTrips: List[TripInfo]): Array[NewTypes.BikeInfo] = {
@@ -37,13 +32,13 @@ object UsageStats {
     checkMonth(groupMonth, arrayMonths)
   }
 
-  private def preparingDataForWriting(configValues: LightBendConfig, listOfMonthsStats: Array[NewTypes.BikeInfo]): Unit = {
+  private def preparingDataForWriting(configValues: LightBendConfig, listOfMonthsStats: Array[NewTypes.BikeInfo]): StatsInfo = {
     logger.debug("Preparing data for writing...")
     val strPath = configValues.pathFilesStats + configValues.pathFileUsageStats
     val fieldsCSV = Array("January", "February", "March", "April", "May",
       "June", "July", "August", "September", "October", "November", "December")
-    val listOfRecords = List(fieldsCSV, listOfMonthsStats)
-    FileWriter.tableWriter(listOfRecords, strPath)
+    val listOfStats = StatsInfo(List(fieldsCSV, listOfMonthsStats), strPath)
+    listOfStats
   }
 
   private def checkMonth(groupMonth: Map[Int, List[TripInfo]], arrayMonths: Array[Month]): Array[MonthInfo] = {

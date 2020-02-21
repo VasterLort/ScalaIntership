@@ -1,22 +1,22 @@
-package by.itechart.internship.logic
+package by.itechart.internship.dao
 
 import by.itechart.internship.entities._
+import by.itechart.internship.logic.MyPostgresDriver.api._
 import by.itechart.internship.types.{ColumnsEnum, GenderEnum, NewTypes, UserTypeEnum}
-import slick.jdbc.PostgresProfile.api._
 
-import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 
 object DatabaseWriter {
-  def logicController(dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): Unit = {
-    deleteData()
-    stationSetter(dataTableOfTrips)
-    bikeSetter(dataTableOfTrips)
-    userInfoSetter(dataTableOfTrips)
-    tripSetter(dataTableOfTrips)
+  def logicController(dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): Future[Option[Int]] = {
+    val station = stationSetter(dataTableOfTrips)
+    val bike = bikeSetter(dataTableOfTrips)
+    val userInfo = userInfoSetter(dataTableOfTrips)
+    val trip = tripSetter(dataTableOfTrips)
+    val insert: DBIO[Option[Int]] = station andThen bike andThen userInfo andThen trip
+    insertData(insert)
   }
 
-  private def stationSetter(dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): Unit = {
+  private def stationSetter(dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): DBIO[Option[Int]] = {
     val messages = TableQuery[StationTable]
 
     val startStationValues = dataTableOfTrips.map(line =>
@@ -29,20 +29,20 @@ object DatabaseWriter {
 
     val stationValues = (startStationValues ++ endStationValues).distinct
     val insert: DBIO[Option[Int]] = messages ++= stationValues
-    insertData(insert)
+    insert
   }
 
-  private def bikeSetter(dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): Unit = {
+  private def bikeSetter(dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): DBIO[Option[Int]] = {
     val messages = TableQuery[BikeTable]
 
     val bikeValues = dataTableOfTrips.map(line =>
       Bike(line(ColumnsEnum.bikeIdColumnIndex.id).toLong, "Not Value", "Not Value")).distinct
 
     val insert: DBIO[Option[Int]] = messages ++= bikeValues
-    insertData(insert)
+    insert
   }
 
-  private def userInfoSetter(dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): Unit = {
+  private def userInfoSetter(dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): DBIO[Option[Int]] = {
     val messages = TableQuery[UserInfoTable]
 
     val userInfoValues = dataTableOfTrips.map(line =>
@@ -55,10 +55,10 @@ object DatabaseWriter {
         line(ColumnsEnum.birthYearColumnIndex.id)))
 
     val insert: DBIO[Option[Int]] = messages ++= userInfoValues
-    insertData(insert)
+    insert
   }
 
-  private def tripSetter(dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): Unit = {
+  private def tripSetter(dataTableOfTrips: List[Array[NewTypes.BikeInfo]]): DBIO[Option[Int]] = {
     val messages = TableQuery[TripTable]
 
     val userInfoValues = dataTableOfTrips.map(line =>
@@ -71,23 +71,20 @@ object DatabaseWriter {
         line(ColumnsEnum.stopTimeColumnIndex.id)))
     println(userInfoValues.length)
     val insert: DBIO[Option[Int]] = messages ++= userInfoValues
-    insertData(insert)
+    insert
   }
 
-  private def insertData(insert: DBIO[Option[Int]]): Unit = {
+  private def insertData(insert: DBIO[Option[Int]]): Future[Option[Int]] = {
     val db = Database.forConfig("database")
-    val insertAction: Future[Option[Int]] = db.run(insert)
-    val rowCount = Await.result(insertAction, 720.second)
-    db.close()
-  }
+    val preparedQuery = db.run(
+      (TableQuery[TripTable].delete andThen
+        TableQuery[UserInfoTable].delete andThen
+        TableQuery[UserInfoTable].delete andThen
+        TableQuery[StationTable].delete andThen
+        TableQuery[BikeTable].delete andThen
+        insert
+        ).transactionally)
 
-  private def deleteData(): Unit = {
-    val db = Database.forConfig("database")
-
-    Await.result(db.run(TableQuery[TripTable].delete), 120.seconds)
-    Await.result(db.run(TableQuery[UserInfoTable].delete), 120.seconds)
-    Await.result(db.run(TableQuery[StationTable].delete), 120.seconds)
-    Await.result(db.run(TableQuery[BikeTable].delete), 120.seconds)
-    db.close()
+    preparedQuery
   }
 }

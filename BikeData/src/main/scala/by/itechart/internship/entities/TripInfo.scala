@@ -1,8 +1,8 @@
 package by.itechart.internship.entities
 
+import by.itechart.internship.logic.MyPostgresDriver.api._
 import by.itechart.internship.types.GenderEnum.Gender
 import by.itechart.internship.types.UserTypeEnum.UserType
-import by.itechart.internship.logic.MyPostgresDriver.api._
 
 case class TripInfo(
                      trip_id: Long,

@@ -1,6 +1,6 @@
 package by.itechart.internship.entities
 
-import slick.jdbc.PostgresProfile.api._
+import by.itechart.internship.logic.MyPostgresDriver.api._
 
 case class Bike(
                  bikeId: Long,
