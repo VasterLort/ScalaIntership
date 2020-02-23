@@ -19,7 +19,7 @@ case class LightBendConfig(
 
 object LightBendConfig {
   private lazy val configLoader = ConfigFactory.load("application.conf")
-  val configSetter = LightBendConfig(configLoader.getString("url.pathFilesStats"),
+  val setConfigValues = LightBendConfig(configLoader.getString("url.pathFilesStats"),
     configLoader.getString("url.pathFileTripData"), configLoader.getString("url.pathFileGeneralStats"),
     configLoader.getString("url.pathFileUsageStats"), configLoader.getString("url.pathFileBikeStats"),
     configLoader.getInt("fileCSV.nameColumnsIndex"), configLoader.getString("fileCSV.genderMenValue"),

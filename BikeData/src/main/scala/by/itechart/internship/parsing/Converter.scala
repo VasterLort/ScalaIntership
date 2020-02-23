@@ -1,4 +1,4 @@
-package by.itechart.internship.logic
+package by.itechart.internship.parsing
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatterBuilder

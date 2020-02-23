@@ -1,23 +1,23 @@
-package by.itechart.internship.logic
+package by.itechart.internship.parsing
 
 import java.time.temporal.ChronoUnit
 
 import by.itechart.internship.config.LightBendConfig
-import by.itechart.internship.entities.TripInfo
-import by.itechart.internship.types.{GenderEnum, NewTypes}
+import by.itechart.internship.dao.TripInfo
+import by.itechart.internship.types.{GenderEnum, NewTypes, StatsInfo}
 import org.slf4j.LoggerFactory
 import org.slf4s.Logger
 
 object GeneralStats {
   private lazy val logger = Logger(LoggerFactory.getLogger(this.getClass))
 
-  def logicController(configValues: LightBendConfig, dataTableOfTrips: List[TripInfo]): StatsInfo = {
-    val listOfGeneralStats = parserGeneralStats(configValues, dataTableOfTrips)
-    preparingDataForWriting(configValues, listOfGeneralStats)
+  def controlLogicGeneralStatsParsing(configValues: LightBendConfig, dataTableOfTrips: List[TripInfo]): StatsInfo = {
+    val listOfGeneralStats = parseGeneralStats(configValues, dataTableOfTrips)
+    prepareDataForWriting(configValues, listOfGeneralStats)
 
   }
 
-  private def parserGeneralStats(configValues: LightBendConfig, dataTableOfTrips: List[TripInfo]): Array[NewTypes.BikeInfo] = {
+  private def parseGeneralStats(configValues: LightBendConfig, dataTableOfTrips: List[TripInfo]): Array[NewTypes.BikeInfo] = {
     logger.debug("Getting GeneralStats from data...")
     val counterRow = dataTableOfTrips.length;
     val theLongestTrip = dataTableOfTrips.map(trip => (ChronoUnit.MINUTES.between
@@ -34,7 +34,7 @@ object GeneralStats {
       uniqueBikes.toString, percentMales.toString, percentFemales.toString, numberOfEmptyValues.toString)
   }
 
-  private def preparingDataForWriting(configValues: LightBendConfig, listOfGeneralStats: Array[NewTypes.BikeInfo]): StatsInfo = {
+  private def prepareDataForWriting(configValues: LightBendConfig, listOfGeneralStats: Array[NewTypes.BikeInfo]): StatsInfo = {
     logger.debug("Preparing data for writing...")
     val strPath = configValues.pathFilesStats + configValues.pathFileGeneralStats
     val fieldsCSV = Array("number of trips", "the longest trip", "unique bikes",

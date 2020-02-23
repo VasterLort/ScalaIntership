@@ -1,4 +1,4 @@
-package by.itechart.internship.logic
+package by.itechart.internship.config
 
 import by.itechart.internship.types.{GenderEnum, UserTypeEnum}
 import com.github.tminglei.slickpg.PgEnumSupport

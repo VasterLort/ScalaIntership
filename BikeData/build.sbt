@@ -22,3 +22,10 @@ libraryDependencies ++= Seq(
 libraryDependencies += "org.flywaydb" % "flyway-sbt" % "4.2.0"
 
 libraryDependencies += "com.github.tminglei" %% "slick-pg" % "0.18.1"
+
+libraryDependencies += "javax.inject" % "javax.inject" % "1"
+
+libraryDependencies ++= Seq(
+  "com.typesafe.play" %% "play-slick" % "4.0.2",
+  "com.typesafe.play" %% "play-slick-evolutions" % "4.0.2"
+)
