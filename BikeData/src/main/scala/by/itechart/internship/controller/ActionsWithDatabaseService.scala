@@ -6,13 +6,20 @@ import by.itechart.internship.types.{ColumnsEnum, GenderEnum, NewTypes, UserType
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object ActionsWithDatabaseController {
-  private val bikeDAO = new BikeDAO("database")
-  private val stationDAO = new StationDAO("database")
-  private val userInfoDAO = new UserInfoDAO("database")
-  private val tripDAO = new TripDAO("database")
-  private val tripInfoDAO = new TripInfoDAO("database")
+object Daos {
+  lazy val bikeDAO: BikeDAO = new BikeDAO()
+  lazy val userInfoDAO: UserInfoDAO = new UserInfoDAO()
+  lazy val tripDAO: TripDAO = new TripDAO()
+  lazy val stationDAO: StationDAO = new StationDAO()
+  lazy val tripInfoDAO: TripInfoDAO = new TripInfoDAO()
+}
 
+class ActionsWithDatabaseService(bikeDAO: BikeDAO = Daos.bikeDAO,
+                                 userInfoDAO: UserInfoDAO = Daos.userInfoDAO,
+                                 tripDAO: TripDAO = Daos.tripDAO,
+                                 stationDAO: StationDAO = Daos.stationDAO,
+                                 tripInfoDAO: TripInfoDAO = Daos.tripInfoDAO
+                                ) {
   def controlLogicDeletingAndInserting(dataOfTrips: List[Array[NewTypes.BikeInfo]]): Future[List[Unit]] = {
     val actionResult = Future.reduce(List(deleteAllData(dataOfTrips), insertAllData(dataOfTrips)))(_ ++ _)
     actionResult

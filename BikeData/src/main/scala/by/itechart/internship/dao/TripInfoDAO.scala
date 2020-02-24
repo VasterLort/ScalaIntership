@@ -1,5 +1,6 @@
 package by.itechart.internship.dao
 
+import by.itechart.internship.config.DatabaseConfig
 import by.itechart.internship.config.MyPostgresDriver.api._
 import by.itechart.internship.types.GenderEnum.Gender
 import by.itechart.internship.types.UserTypeEnum.UserType
@@ -20,9 +21,8 @@ case class TripInfo(
                      end_time: String
                    )
 
-class TripInfoDAO(configNameDB: String) {
-  private val db = Database.forConfig(configNameDB)
-
+class TripInfoDAO(val dbProvider: DatabaseConfig.type = DatabaseConfig) {
+  val db = dbProvider.db
   private val tripInfo = TableQuery[TripInfoView]
 
   def getAll(): Future[List[TripInfo]] = db.run(tripInfo.result).map(_.map(_.asInstanceOf[TripInfo]).toList)

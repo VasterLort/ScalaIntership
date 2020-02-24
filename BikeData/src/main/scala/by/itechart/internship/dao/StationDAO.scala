@@ -1,5 +1,6 @@
 package by.itechart.internship.dao
 
+import by.itechart.internship.config.DatabaseConfig
 import by.itechart.internship.config.MyPostgresDriver.api._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -12,9 +13,9 @@ case class Station(
                     longitude: Double
                   )
 
-class StationDAO(configNameDB: String) {
-  private val db = Database.forConfig(configNameDB)
 
+class StationDAO(val dbProvider: DatabaseConfig.type = DatabaseConfig) {
+  val db = dbProvider.db
   private val stations = TableQuery[StationTable]
 
   def insert(station: Station): Future[Unit] = db.run(stations += station).map { _ => () }

@@ -1,7 +1,7 @@
 package by.itechart.internship.usingfiles
 
 import by.itechart.internship.config.LightBendConfig
-import by.itechart.internship.controller.ActionsWithDatabaseController
+import by.itechart.internship.controller.ActionsWithDatabaseService
 import org.slf4j.LoggerFactory
 import org.slf4s.Logger
 
@@ -9,10 +9,10 @@ import scala.concurrent.Future
 import scala.io.Source
 import scala.util.{Failure, Success, Try}
 
-object FileReader {
+class FileReader(actionsWithDatabaseService: ActionsWithDatabaseService = new ActionsWithDatabaseService()) {
   private lazy val logger = Logger(LoggerFactory.getLogger(this.getClass))
 
-  def readFromCSVFile(configValues: LightBendConfig): Future[List[Unit]] = {
+  def readFromCSVFile(configValues: LightBendConfig): Future[Either[Exception, List[Unit]]] = {
     logger.debug("Reading data from CSV-file...")
     Try(Source.fromURL(getClass.getResource(configValues.pathFileTripData))) match {
       case Success(data) => {
@@ -21,10 +21,10 @@ object FileReader {
           .toList
           .drop(configValues.nameColumnsIndex)
 
-        ActionsWithDatabaseController.controlLogicDeletingAndInserting(dataOfTrips)
+        actionsWithDatabaseService.controlLogicDeletingAndInserting(dataOfTrips)
       }
       case Failure(e) => {
-        throw new Exception("Problem with inserting data to database" + e)
+        Future.successful(Right(s Exception("Problem with inserting data to database" + e)
       }
     }
   }

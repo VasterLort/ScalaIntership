@@ -1,5 +1,6 @@
 package by.itechart.internship.dao
 
+import by.itechart.internship.config.DatabaseConfig
 import by.itechart.internship.config.MyPostgresDriver.api._
 import by.itechart.internship.types.GenderEnum.Gender
 import by.itechart.internship.types.UserTypeEnum.UserType
@@ -14,9 +15,8 @@ case class UserInfo(
                      userId: Long = 0L
                    )
 
-class UserInfoDAO(configNameDB: String) {
-  private val db = Database.forConfig(configNameDB)
-
+class UserInfoDAO(val dbProvider: DatabaseConfig.type = DatabaseConfig) {
+  val db = dbProvider.db
   private val usersInfo = TableQuery[UserInfoTable]
 
   def insert(userInfo: UserInfo): Future[Unit] = db.run(usersInfo += userInfo).map { _ => () }
