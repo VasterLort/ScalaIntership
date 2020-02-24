@@ -2,8 +2,8 @@ package by.itechart.internship.dao
 
 import by.itechart.internship.config.DatabaseConfig
 import by.itechart.internship.config.MyPostgresDriver.api._
-import by.itechart.internship.types.GenderEnum.Gender
-import by.itechart.internship.types.UserTypeEnum.UserType
+import by.itechart.internship.types.enums.GenderEnum.Gender
+import by.itechart.internship.types.enums.UserTypeEnum.UserType
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -21,7 +21,7 @@ case class TripInfo(
                      end_time: String
                    )
 
-class TripInfoDAO(val dbProvider: DatabaseConfig.type = DatabaseConfig) {
+class TripInfoDao(val dbProvider: DatabaseConfig.type = DatabaseConfig) {
   val db = dbProvider.db
   private val tripInfo = TableQuery[TripInfoView]
 

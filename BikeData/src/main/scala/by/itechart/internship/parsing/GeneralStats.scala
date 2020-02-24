@@ -4,7 +4,8 @@ import java.time.temporal.ChronoUnit
 
 import by.itechart.internship.config.LightBendConfig
 import by.itechart.internship.dao.TripInfo
-import by.itechart.internship.types.{GenderEnum, NewTypes, StatsInfo}
+import by.itechart.internship.types.StatsInfo
+import by.itechart.internship.types.enums.GenderEnum
 import org.slf4j.LoggerFactory
 import org.slf4s.Logger
 
@@ -17,7 +18,7 @@ object GeneralStats {
 
   }
 
-  private def parseGeneralStats(configValues: LightBendConfig, dataTableOfTrips: List[TripInfo]): Array[NewTypes.BikeInfo] = {
+  private def parseGeneralStats(configValues: LightBendConfig, dataTableOfTrips: List[TripInfo]): Array[String] = {
     logger.debug("Getting GeneralStats from data...")
     val counterRow = dataTableOfTrips.length;
     val theLongestTrip = dataTableOfTrips.map(trip => (ChronoUnit.MINUTES.between
@@ -34,7 +35,7 @@ object GeneralStats {
       uniqueBikes.toString, percentMales.toString, percentFemales.toString, numberOfEmptyValues.toString)
   }
 
-  private def prepareDataForWriting(configValues: LightBendConfig, listOfGeneralStats: Array[NewTypes.BikeInfo]): StatsInfo = {
+  private def prepareDataForWriting(configValues: LightBendConfig, listOfGeneralStats: Array[String]): StatsInfo = {
     logger.debug("Preparing data for writing...")
     val strPath = configValues.pathFilesStats + configValues.pathFileGeneralStats
     val fieldsCSV = Array("number of trips", "the longest trip", "unique bikes",

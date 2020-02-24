@@ -4,7 +4,7 @@ import java.time.Month
 
 import by.itechart.internship.config.LightBendConfig
 import by.itechart.internship.dao.TripInfo
-import by.itechart.internship.types.{NewTypes, StatsInfo}
+import by.itechart.internship.types.StatsInfo
 import org.slf4j.LoggerFactory
 import org.slf4s.Logger
 
@@ -19,7 +19,7 @@ object UsageStats {
 
   }
 
-  private def parseUsageStats(configValues: LightBendConfig, dataTableOfTrips: List[TripInfo]): Array[NewTypes.BikeInfo] = {
+  private def parseUsageStats(configValues: LightBendConfig, dataTableOfTrips: List[TripInfo]): Array[String] = {
     logger.debug("Getting UsageStats from data...")
     val groupMonth = dataTableOfTrips
       .groupBy(trip => Converter.convertToDate(trip.start_time).getMonth.getValue)
@@ -32,7 +32,7 @@ object UsageStats {
     checkMonth(groupMonth, arrayMonths)
   }
 
-  private def prepareDataForWriting(configValues: LightBendConfig, listOfMonthsStats: Array[NewTypes.BikeInfo]): StatsInfo = {
+  private def prepareDataForWriting(configValues: LightBendConfig, listOfMonthsStats: Array[String]): StatsInfo = {
     logger.debug("Preparing data for writing...")
     val strPath = configValues.pathFilesStats + configValues.pathFileUsageStats
     val fieldsCSV = Array("January", "February", "March", "April", "May",

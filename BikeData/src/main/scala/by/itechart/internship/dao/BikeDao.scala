@@ -12,7 +12,7 @@ case class Bike(
                  lastUsage: String
                )
 
-class BikeDAO(val dbProvider: DatabaseConfig.type = DatabaseConfig) {
+class BikeDao(val dbProvider: DatabaseConfig.type = DatabaseConfig) {
   val db = dbProvider.db
   private val bikes = TableQuery[BikeTable]
 

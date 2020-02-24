@@ -17,7 +17,7 @@ case class Trip(
                  tripId: Long = 0L
                )
 
-class TripDAO(val dbProvider: DatabaseConfig.type = DatabaseConfig) {
+class TripDao(val dbProvider: DatabaseConfig.type = DatabaseConfig) {
   val db = dbProvider.db
   private val trips = TableQuery[TripTable]
 

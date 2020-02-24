@@ -1,6 +1,6 @@
 package by.itechart.internship.config
 
-import by.itechart.internship.types.{GenderEnum, UserTypeEnum}
+import by.itechart.internship.types.enums.{GenderEnum, UserTypeEnum}
 import com.github.tminglei.slickpg.PgEnumSupport
 import slick.jdbc.PostgresProfile
 
@@ -26,11 +26,3 @@ object DatabaseConfig {
   import MyPostgresDriver.api._
   val db = Database.forConfig("database")
 }
-
-Option[List[Future]]
-
-Optionn[Try[Future]]
-Option[Future[Option[List]]]
-
-Future[Option[List]]
-Future[List]

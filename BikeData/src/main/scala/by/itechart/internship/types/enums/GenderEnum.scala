@@ -1,4 +1,4 @@
-package by.itechart.internship.types
+package by.itechart.internship.types.enums
 
 object GenderEnum extends Enumeration {
   type Gender = Value

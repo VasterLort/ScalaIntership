@@ -14,7 +14,7 @@ case class Station(
                   )
 
 
-class StationDAO(val dbProvider: DatabaseConfig.type = DatabaseConfig) {
+class StationDao(val dbProvider: DatabaseConfig.type = DatabaseConfig) {
   val db = dbProvider.db
   private val stations = TableQuery[StationTable]
 

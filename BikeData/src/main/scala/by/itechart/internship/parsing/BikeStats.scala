@@ -4,7 +4,7 @@ import java.time.temporal.ChronoUnit
 
 import by.itechart.internship.config.LightBendConfig
 import by.itechart.internship.dao.TripInfo
-import by.itechart.internship.types.{NewTypes, StatsInfo}
+import by.itechart.internship.types.StatsInfo
 import org.slf4j.LoggerFactory
 import org.slf4s.Logger
 
@@ -31,7 +31,7 @@ object BikeStats {
     listOfBikesStats.flatMap(row => Array(s"${row._1}, ${row._2}, ${row._3} \n"))
   }
 
-  private def prepareDataForWriting(configValues: LightBendConfig, listOfBikeStats: Array[NewTypes.BikeInfo]): StatsInfo = {
+  private def prepareDataForWriting(configValues: LightBendConfig, listOfBikeStats: Array[String]): StatsInfo = {
     logger.debug("Preparing data for writing...")
     val strPath = configValues.pathFilesStats + configValues.pathFileBikeStats
     val fieldsCSV = Array("bikeId", "number of trip", "time using")
