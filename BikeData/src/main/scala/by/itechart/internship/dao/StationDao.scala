@@ -18,11 +18,9 @@ class StationDao(val dbProvider: DatabaseConfig.type = DatabaseConfig) {
   val db = dbProvider.db
   private val stations = TableQuery[StationTable]
 
-  def insert(station: Station): Future[Unit] = db.run(stations += station).map { _ => () }
+  def insert(listOfStations: List[Station]): Future[Int] = db.run(stations ++= listOfStations).map(_.size)
 
-  def insert(listOfStations: List[Station]): Future[Unit] = db.run(stations ++= listOfStations).map { _ => () }
-
-  def deleteAll(): Future[Unit] = db.run(stations.delete).map { _ => () }
+  def deleteAll(): Future[Int] = db.run(stations.delete)
 
   private class StationTable(tag: Tag) extends Table[Station](tag, "station") {
     def stationId = column[Long]("station_id", O.PrimaryKey)

@@ -19,11 +19,9 @@ class UserInfoDao(val dbProvider: DatabaseConfig.type = DatabaseConfig) {
   val db = dbProvider.db
   private val usersInfo = TableQuery[UserInfoTable]
 
-  def insert(userInfo: UserInfo): Future[Unit] = db.run(usersInfo += userInfo).map { _ => () }
+  def insert(listOfUsersInfo: List[UserInfo]): Future[Int] = db.run(usersInfo ++= listOfUsersInfo).map(_.size)
 
-  def insert(listOfUsersInfo: List[UserInfo]): Future[Unit] = db.run(usersInfo ++= listOfUsersInfo).map { _ => () }
-
-  def deleteAll(): Future[Unit] = db.run(usersInfo.delete).map { _ => () }
+  def deleteAll(): Future[Int] = db.run(usersInfo.delete)
 
   private class UserInfoTable(tag: Tag) extends Table[UserInfo](tag, "user_info") {
 

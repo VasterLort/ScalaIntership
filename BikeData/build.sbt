@@ -1,8 +1,6 @@
 name := "BikeData"
-version := "0.1"
+version := "1.3.8"
 scalaVersion := "2.11.12"
-
-enablePlugins(FlywayPlugin)
 
 libraryDependencies += "au.com.bytecode" % "opencsv" % "2.4"
 
@@ -22,3 +20,10 @@ libraryDependencies ++= Seq(
 libraryDependencies += "org.flywaydb" % "flyway-sbt" % "4.2.0"
 
 libraryDependencies += "com.github.tminglei" %% "slick-pg" % "0.18.1"
+
+enablePlugins(FlywayPlugin)
+
+flywayUrl := "jdbc:postgresql://localhost/data_trip"
+flywayUser := "postgres"
+flywayPassword := "kanekiken1998"
+flywayLocations += "db/migration"

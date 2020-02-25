@@ -14,7 +14,7 @@ import scala.util.{Failure, Try}
 object FileWriter {
   private lazy val logger = Logger(LoggerFactory.getLogger(this.getClass))
 
-  def writeToCSVFile(configValues: LightBendConfig, listOfRecords: List[StatsInfo]): Unit = {
+  def writeToCSVFile(configValues: LightBendConfig, listOfRecords: List[StatsInfo]): List[Try[String]] = {
     logger.debug("Writing data to CSV-file...")
 
     listOfRecords.map(list =>
@@ -26,13 +26,12 @@ object FileWriter {
           logger.debug("Completed...")
           csvWriter.close()
         } match {
-          case f@Failure(_) =>
-            Try(csvWriter.close()).recoverWith {
-              case _ =>
-                logger.debug("Problem with writing data to CSV-file ... = " + f)
-                f
-            }
-          case success => success
+          case Failure(f) => {
+            csvWriter.close()
+            Try("Problem with writing data to CSV-file ... = " + f)
+          }
+          case Failure(s) =>
+            Try("Successful writing data to CSV-file ... = " + s)
         }
       )
     )

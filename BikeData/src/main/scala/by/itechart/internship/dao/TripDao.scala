@@ -21,11 +21,9 @@ class TripDao(val dbProvider: DatabaseConfig.type = DatabaseConfig) {
   val db = dbProvider.db
   private val trips = TableQuery[TripTable]
 
-  def insert(trip: Trip): Future[Unit] = db.run(trips += trip).map { _ => () }
+  def insert(listOfTrips: List[Trip]): Future[Int] = db.run(trips ++= listOfTrips).map(_.size)
 
-  def insert(listOfTrips: List[Trip]): Future[Unit] = db.run(trips ++= listOfTrips).map { _ => () }
-
-  def deleteAll(): Future[Unit] = db.run(trips.delete).map { _ => () }
+  def deleteAll(): Future[Int] = db.run(trips.delete)
 
   private class TripTable(tag: Tag) extends Table[Trip](tag, "trip") {
     def tripId = column[Long]("trip_id", O.PrimaryKey, O.AutoInc)

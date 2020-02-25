@@ -16,11 +16,9 @@ class BikeDao(val dbProvider: DatabaseConfig.type = DatabaseConfig) {
   val db = dbProvider.db
   private val bikes = TableQuery[BikeTable]
 
-  def insert(bike: Bike): Future[Unit] = db.run(bikes += bike).map { _ => () }
+  def insert(listOfBikes: List[Bike]): Future[Int] = db.run(bikes ++= listOfBikes).map(_.size)
 
-  def insert(listOfBikes: List[Bike]): Future[Unit] = db.run(bikes ++= listOfBikes).map { _ => () }
-
-  def deleteAll(): Future[Unit] = db.run(bikes.delete).map { _ => () }
+  def deleteAll(): Future[Int] = db.run(bikes.delete)
 
   private class BikeTable(tag: Tag) extends Table[Bike](tag, "bike") {
     def bikeId = column[Long]("bike_id", O.PrimaryKey)

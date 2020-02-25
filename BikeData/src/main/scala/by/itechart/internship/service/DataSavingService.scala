@@ -17,14 +17,14 @@ class DataSavingService(
                          tripInfoDao: TripInfoDao = Daos.tripInfoDao
                        ) {
 
-  def controlLogicDeletingAndInsertingData(configValues: LightBendConfig): Future[List[Unit]] = {
+  def controlLogicDeletingAndInsertingData(configValues: LightBendConfig): Future[List[Int]] = {
     val dataOfTrips = FileReader.readFromCSVFile(configValues)
     dataOfTrips.flatMap { vector =>
       Future.reduce(List(deleteAllData(vector.right.get), insertAllData(vector.right.get)))(_ ++ _)
     }
   }
 
-  private def deleteAllData(dataOfTrips: List[Array[String]]): Future[List[Unit]] = {
+  private def deleteAllData(dataOfTrips: List[Array[String]]): Future[List[Int]] = {
     val actionResult = Future.sequence(List(
       tripDao.deleteAll(),
       userInfoDao.deleteAll(),
@@ -33,7 +33,7 @@ class DataSavingService(
     actionResult
   }
 
-  private def insertAllData(dataOfTrips: List[Array[String]]): Future[List[Unit]] = {
+  private def insertAllData(dataOfTrips: List[Array[String]]): Future[List[Int]] = {
     val actionResult = Future.sequence(List(
       bikeDao.insert(PreparingDataForWriting.prepareBikeData(dataOfTrips)),
       stationDao.insert(PreparingDataForWriting.prepareStationData(dataOfTrips)),
