@@ -1,6 +1,6 @@
-package by.itechart.internship
+package by.itechart.internship.types.enums
 
-object Columns extends Enumeration {
+object ColumnsEnum extends Enumeration {
   val tripDurationColumnIndex = Value(0)
   val startTimeColumnIndex = Value(1)
   val stopTimeColumnIndex = Value(2)

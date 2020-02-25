@@ -1,4 +1,4 @@
-package by.itechart.internship
+package by.itechart.internship.parsing
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatterBuilder
@@ -15,4 +15,5 @@ object Converter {
     val dateUpdate = LocalDateTime.parse(string, dateFormat)
     dateUpdate
   }
+
 }

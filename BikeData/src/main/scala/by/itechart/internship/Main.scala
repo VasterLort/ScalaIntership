@@ -1,20 +1,26 @@
 package by.itechart.internship
 
-import scala.util.{Failure, Success, Try}
+import by.itechart.internship.config.LightBendConfig
+import by.itechart.internship.parsing._
+import by.itechart.internship.service.{DataGettingService, DataSavingService}
+import by.itechart.internship.usingfiles.FileWriter
+
+import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
 
 object Main extends App {
-  val configValues = LightBendConfig.configSetter
-  Try(FileReader.tableReader(configValues)) match {
-    case Success(data) => {
-      val dataTableOfTrips = data.getLines()
-        .map(_.replaceAll("\"", "").split(configValues.delimiterOfFile))
-        .toList
-        .drop(configValues.nameColumnsIndex)
+  val configValues = LightBendConfig.setConfigValues
 
-      GeneralStats.logicController(configValues, dataTableOfTrips)
-      UsageStats.logicController(configValues, dataTableOfTrips)
-      BikeStats.logicController(configValues, dataTableOfTrips)
+  val result = new DataSavingService().controlLogicDeletingAndInsertingData(configValues).flatMap(_ => {
+    new DataGettingService().getTripInfo().map { vector =>
+      val listOfRecords = List(
+        GeneralStats.controlLogicGeneralStatsParsing(configValues, vector),
+        UsageStats.controlLogicUsageStatsParsing(configValues, vector),
+        BikeStats.controlLogicBikeStatsParsing(configValues, vector))
+      FileWriter.writeToCSVFile(configValues, listOfRecords)
     }
-    case Failure(e) => println(s"An error has occured, cause: $e")
-  }
+  })
+
+  Await.result(result, 720.seconds)
 }
